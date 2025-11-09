@@ -5,9 +5,10 @@ FROM eclipse-temurin:17-jdk AS builder
 WORKDIR /app
 
 # Copy Maven wrapper and pom.xml
-COPY spring-petclinic/mvnw spring-petclinic/.mvn spring-petclinic/mvnw.cmd ./
-COPY spring-petclinic/pom.xml ./
-COPY spring-petclinic/.mvn/wrapper/maven-wrapper.properties ./.mvn/wrapper/
+COPY mvnw ./
+COPY mvnw.cmd ./
+COPY .mvn .mvn
+COPY pom.xml ./
 
 # Make mvnw executable
 RUN chmod +x ./mvnw
@@ -16,7 +17,7 @@ RUN chmod +x ./mvnw
 RUN ./mvnw dependency:go-offline -B
 
 # Copy source code
-COPY spring-petclinic/src ./src
+COPY src ./src
 
 # Build the application
 RUN ./mvnw clean package -DskipTests
