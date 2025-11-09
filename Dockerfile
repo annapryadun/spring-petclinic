@@ -1,5 +1,5 @@
 # Multi-stage build for Spring Pet Clinic application
-FROM eclipse-temurin:17-jdk AS builder
+FROM eclipse-temurin:25-jdk AS builder
 
 # Set working directory
 WORKDIR /app
@@ -23,7 +23,7 @@ COPY src ./src
 RUN ./mvnw clean package -DskipTests
 
 # Runtime stage
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:25-jre
 
 # Create non-root user
 RUN groupadd -r petclinic && useradd -r -g petclinic petclinic
