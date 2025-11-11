@@ -31,11 +31,16 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Debug role secret
+        run: |
+          echo "Role to assume: '${{ secrets.AWS_ROLE_TO_ASSUME }}'"
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ env.PRIMARY_REGION }}
+
 
       - name: Login to Amazon ECR (Primary)
         run: |
