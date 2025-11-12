@@ -12,7 +12,6 @@ on:
 
 
 env:
-  AWS_ACCOUNT_ID: "307730362440"
   PRIMARY_REGION: eu-west-1
   SECONDARY_REGION: us-east-1
   REPOSITORY: gorilla-clinic
@@ -31,10 +30,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Debug role secret
-        run: |
-          echo "Role to assume: '${{ secrets.AWS_ROLE_TO_ASSUME }}'"
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -46,18 +41,18 @@ jobs:
         run: |
           aws ecr get-login-password --region ${{ env.PRIMARY_REGION }} | \
             docker login --username AWS --password-stdin \
-            ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.PRIMARY_REGION }}.amazonaws.com
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.PRIMARY_REGION }}.amazonaws.com
 
       - name: Login to Amazon ECR (Secondary)
         run: |
           aws ecr get-login-password --region ${{ env.SECONDARY_REGION }} | \
             docker login --username AWS --password-stdin \
-            ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.SECONDARY_REGION }}.amazonaws.com
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.SECONDARY_REGION }}.amazonaws.com
 
       - name: Build Image
         run: |
-          PRIMARY_IMAGE=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.PRIMARY_REGION }}.amazonaws.com/${{ env.REPOSITORY }}
-          SECONDARY_IMAGE=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.SECONDARY_REGION }}.amazonaws.com/${{ env.REPOSITORY }}
+          PRIMARY_IMAGE=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.PRIMARY_REGION }}.amazonaws.com/${{ env.REPOSITORY }}
+          SECONDARY_IMAGE=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.SECONDARY_REGION }}.amazonaws.com/${{ env.REPOSITORY }}
           echo "PRIMARY_IMAGE=$PRIMARY_IMAGE" >> $GITHUB_ENV
           echo "SECONDARY_IMAGE=$SECONDARY_IMAGE" >> $GITHUB_ENV
           echo "Building image tagged as:"
