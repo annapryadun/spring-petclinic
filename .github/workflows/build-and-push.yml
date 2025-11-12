@@ -9,6 +9,16 @@ on:
     branches: 
       - main
       - feature/* 
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "GitHub environment to use (controls secrets/approvals)"
+        type: choice
+        required: true
+        default: staging
+        options:
+          - staging
+          - production
 
 
 env:
@@ -19,6 +29,7 @@ env:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
     permissions:
       contents: read
       id-token: write
