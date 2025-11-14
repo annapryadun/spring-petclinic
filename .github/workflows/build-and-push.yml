@@ -67,20 +67,20 @@ jobs:
           echo "PRIMARY_IMAGE=$PRIMARY_IMAGE" >> $GITHUB_ENV
           echo "SECONDARY_IMAGE=$SECONDARY_IMAGE" >> $GITHUB_ENV
           echo "Building image tagged as:"
-          echo "  $PRIMARY_IMAGE:latest"
-          echo "  $SECONDARY_IMAGE:latest"
+          echo "  $PRIMARY_IMAGE:cat"
+          echo "  $SECONDARY_IMAGE:cat"
           docker buildx build \
             --platform linux/amd64 \
             --load \
-            -t $PRIMARY_IMAGE:latest \
-            -t $SECONDARY_IMAGE:latest \
+            -t $PRIMARY_IMAGE:cat \
+            -t $SECONDARY_IMAGE:cat \
             .
 
       - name: Push Image (Primary)
         run: |
-          docker push $PRIMARY_IMAGE:latest
+          docker push $PRIMARY_IMAGE:cat
 
       - name: Push Image (Secondary)
         run: |
-          docker push $SECONDARY_IMAGE:latest
+          docker push $SECONDARY_IMAGE:cat
 
